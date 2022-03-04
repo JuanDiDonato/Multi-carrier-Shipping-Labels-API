@@ -11,7 +11,7 @@ class Server {
         this.app = express();
     }
     Middlewares() {
-        this.app.set('port', 6000);
+        this.app.set('port',process.env.PORT);
         this.app.use(express.json());
         this.app.use(morgan('dev'));
         this.app.use(cookieParser());
@@ -31,8 +31,8 @@ class Server {
         })
     }
     get init() {
-        this.Middlewares();
         this.Dotenv();
+        this.Middlewares();
         this.Routes();
         this.Start();
     }

@@ -1,12 +1,12 @@
 // models
-const LabelModel = require('./model/modelLabel');
+const CarrierApiModel = require('./model/carrierApiModel');
 const Status = require('../models/status')
 
 /*
 Para crear un controlador con los metodos del modelo, solo pasado la base de datos y la url de la API :
 */ 
 
-const LabelController = new LabelModel(process.env.API_URL,Status)
+const LabelController = new CarrierApiModel(process.env.API_URL,Status)
 
 /*
 

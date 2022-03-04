@@ -6,7 +6,19 @@ class Validations {
             }
         }
         return data
-    } r
+    }
+    static async Exists(model,_id){
+        let data
+        try{
+            data = await model.findOne({_id})
+        }catch{
+            data = null
+        }finally{
+            if(data) return true
+            return false
+        }
+
+    }
 }
 
 module.exports = Validations
