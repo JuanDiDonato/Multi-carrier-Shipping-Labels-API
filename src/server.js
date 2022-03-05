@@ -23,6 +23,7 @@ class Server {
     }
     Routes() {
         this.app.use('/labels', require('./routes/labels'));
+        this.app.use('/clients', require('./routes/users'));
         this.app.use(express.static(path.join(__dirname, 'public')))
     }
     Start() {

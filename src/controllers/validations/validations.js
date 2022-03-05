@@ -1,21 +1,30 @@
 class Validations {
+
+    // verifica que se hayan enviado datos de envio y del correo
     static isNull(data) {
         for (let i in data) {
-            if (!data[i].carrier || data[i].carrier === '' || data[i].carrier === null || !data[i].shipment ||data[i].shipment === {}) {
+            if (!data[i].carrier || data[i].carrier === '' || data[i].carrier === null || !data[i].shipment || data[i].shipment === {}) {
                 return []
             }
         }
         return data
     }
-    static async Exists(model,_id){
+
+    // valida que los datos obtenidos del body no sean nulos, ni que esten en blanco
+    static notNull(data) {
+        for (let i in data) {
+            if (!data[i] || data[i] === null || data[i] === '') return true
+        }
+        return false
+    }
+    static async Exists(model, shipment_id) {
         let data
-        try{
-            data = await model.findOne({_id})
-        }catch{
+        try {
+            data = await model.findOne({ shipment_id })
+        } catch {
             data = null
-        }finally{
-            if(data) return true
-            return false
+        } finally {
+            return data
         }
 
     }
