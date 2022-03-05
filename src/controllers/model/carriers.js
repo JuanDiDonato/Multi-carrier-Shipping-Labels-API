@@ -29,17 +29,17 @@ class Carries {
             },
             validateStatus: false
         }
-        let i = 0
+        let i = 0;
         // Consulta
         for(i;i<1;){
-            const { data } = await axios.post(process.env.API_URL, shipment_data, params)
+            const { data } = await axios.post(process.env.API_URL, shipment_data, params);
             if (data['data']) {
-                i++
-                return { 'id': data.data.id, 'url': data.data.attributes.file_url }
+                i++;
+                return { 'id': data.data.id, 'url': data.data.attributes.file_url };
             }
             else if (data['errors'] && data['errors'] !== []) {
-                i++
-                return data
+                i++;
+                return data;
             }
         }
     }

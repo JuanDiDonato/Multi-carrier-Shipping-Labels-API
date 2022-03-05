@@ -22,8 +22,8 @@ class StatusControllers {
     }
 
     async Status(shipment_id) {
-        const NewStatus = new Status({ shipment_id })
-        await NewStatus.save()
+        const NewStatus = new Status({ shipment_id });
+        await NewStatus.save();
     }
 
     async changeStatus(shipment_id, label_status, label_status_description,url) {
