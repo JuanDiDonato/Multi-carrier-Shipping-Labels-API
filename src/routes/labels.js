@@ -5,7 +5,7 @@ const passport = require('passport');
 require('../passport')
 const router = Router();
 
-router.post('/', passport.authenticate('jwt', { session: false }), (req, res) => LabelControllers.Shipments(req, res));
+router.post('/', passport.authenticate('jwt', { session: false }), (req, res) => LabelControllers.Shipments(req,res));
 router.post('/check', passport.authenticate('jwt', { session: false }), (req, res) => StatusControllers.getById(req, res));
 
 module.exports = router

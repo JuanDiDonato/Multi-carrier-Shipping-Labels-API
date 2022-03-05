@@ -18,8 +18,16 @@ class StatusControllers {
                 }
                 res.status(200).json({ error: false, status })
             })
-        }else res.status(404).json({error:true,message:'Ocurrio un error inesperado.'})
+        } else res.status(404).json({ error: true, message: 'Ocurrio un error inesperado.' })
+    }
 
+    async Status(shipment_id) {
+        const NewStatus = new Status({ shipment_id })
+        await NewStatus.save()
+    }
+
+    async changeStatus(shipment_id, label_status, label_status_description,url) {
+        await Status.findOneAndUpdate({ shipment_id }, { label_status, label_status_description, url })
     }
 }
 
