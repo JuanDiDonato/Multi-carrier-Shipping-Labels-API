@@ -11,48 +11,39 @@ const AdmZipHelper = require('../helpers/admZip');
 
 // validaciones
 const Validations = require('./validations/validations');
+const res = require('express/lib/response');
 
 class LabelController {
     constructor() {
         this.path = `/home/juan/Documentos/Skydropx-Challenge/src/public/pdfs/`;
         this.zip_url = 'http://localhost:5000/zip/';
-        this.zip_path = `/home/juan/Documentos/Skydropx-Challenge/src/public/zip/labels.zip`;
+        this.zip_path = `/home/juan/Documentos/Skydropx-Challenge/src/public/zip/`;
     }
 
-    async Shipments(req, res) {
+    Shipments(req, res) {
         const shipments = req.body;
-        let ids = [], isError = false
         const shipments_data = Validations.isNull(shipments);
         if (shipments_data && shipments_data.length === 0) {
             res.status(400).json({ erro: true, message: 'Ocurrio un error.' });
         }
         else {
-            this.Requests(shipments_data).then(results => {
-                results.forEach(element => {
-                    if (element.errors) {
-                        isError = true;
-                    } else {
-                        ids.push(element.id);
-                        StatusControllers.Status(element.id);
-                    }
-                });
-                if (isError === true) {
-                    res.status(400).json({ erro: true, message: 'Ocurrio un error inesperado, verifique los datos enviados' });
+            this.Requests(shipments_data).then(async results => {
+                if (results.length > 0) {
+                    const id = await StatusControllers.Status();
+                    res.status(200).json({ error: false, message: 'Etiquetas solicitadas con exito.', id: id })
+                    this.Download(results, id);
+
                 } else {
-                    let zip = AdmZipHelper.Read(this.zip_path)
-                    if (zip.length === 0) {
-                        AdmZipHelper.createZip(this.path)
-                    }
-                    this.Download(results)
-                    res.status(200).json({ error: false, message: 'Etiquetas solicitadas con exito.', labels: ids })
+                    res.status(400).json({ error: true, message: 'Complete todos los campos' })
                 }
             })
         }
     }
 
     // Descarga los PDFs desde el link que devuelve la API
-    async Download(urls) {
+    async Download(urls, id) {
 
+        console.log(id);
         /*
         Inicia el proceso para obtener la etiqueta
         Recorre todas las URLs recibidas, y crea un Zip para cada una con el id de la solicitud.
@@ -60,28 +51,31 @@ class LabelController {
         */
 
         let count = 0, filesnames = [];
+        await StatusControllers.changeStatus(id, 'processing', 'Processing label generation');
         for (let i in urls) {
-            StatusControllers.changeStatus(urls[i].id, 'processing', 'Processing label generation');
             await https.get(urls[i].url, (res) => {
                 let filename = urls[i].id, filepath = this.path + filename + '.pdf';
                 filesnames.push(filename);
                 const filePath = fs.createWriteStream(filepath);
                 res.pipe(filePath);
-                filePath.on('finish', () => {
+                filePath.on('finish', async () => {
                     count = count + 1;
                     if (count === urls.length) {
-                        try {
-                            AdmZipHelper.UpdateZip(this.zip_path, this.path, filesnames).then(() => {
-                                StatusControllers.changeStatus(filename, 'completed', 'Label generation completed', `${this.zip_url + filename}.zip`);
-                                this.Remove(filesnames);
-                            })
-                        } catch (error) {
-                            StatusControllers.changeStatus(urls[i].id, 'error', 'Something went wrong during the label generation');
+                        if (count === urls.length) {
+                            try {
+                                await AdmZipHelper.createZip(this.path, id)
+                                await StatusControllers.changeStatus(id, 'completed', 'Label generation completed', `${this.zip_url + id}.zip`);
+                                this.Remove(filesnames)
+                
+                            } catch (error) {
+                                StatusControllers.changeStatus(id, 'error', 'Something went wrong during the label generation');
+                            }
                         }
                     }
                 });
             })
         }
+
     }
 
     // Elimina los PDF descargados luego de comprimirlos
@@ -112,11 +106,14 @@ class LabelController {
                     // fake carrier api
                     case "fake_carrier":
                         const data = await Carries.FakeCarrier(shipments_data[i]);
-                        results.push(data);
                         if (data.errors) {
                             i = shipments_data.length;
+                            results = []
+                        } else {
+                            results.push(data);
+                            i++;
                         }
-                        i++;
+
                         break;
 
                     /*

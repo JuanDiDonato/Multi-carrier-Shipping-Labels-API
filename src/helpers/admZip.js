@@ -4,10 +4,10 @@ const AdmZip = require("adm-zip");
 class AdmZipHelper {
 
     // Crea el archivo .zip
-    static async createZip(path) {
+    static async createZip(path,zipname) {
         try {
             const zip = new AdmZip();
-            const outputFile = `/home/juan/Documentos/Skydropx-Challenge/src/public/zip/labels.zip`;
+            const outputFile = `/home/juan/Documentos/Skydropx-Challenge/src/public/zip/${zipname}.zip`;
             zip.addLocalFolder(path);
             zip.writeZip(outputFile);
         } catch (error) {
