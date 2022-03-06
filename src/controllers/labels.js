@@ -24,7 +24,7 @@ class LabelController {
         const shipments = req.body;
         const shipments_data = Validations.isNull(shipments);
         if (shipments_data && shipments_data.length === 0) {
-            res.status(400).json({ erro: true, message: 'Ocurrio un error.' });
+            res.status(400).json({ error: true, message: 'Ocurrio un error.' });
         }
         else {
             this.Requests(shipments_data).then(async results => {
@@ -34,7 +34,7 @@ class LabelController {
                     this.Download(results, id);
 
                 } else {
-                    res.status(400).json({ error: true, message: 'Complete todos los campos' })
+                    res.status(400).json({ error: true, message: 'Complete todos los campos.' })
                 }
             })
         }
@@ -66,7 +66,7 @@ class LabelController {
                                 await AdmZipHelper.createZip(this.path, id)
                                 await StatusControllers.changeStatus(id, 'completed', 'Label generation completed', `${this.zip_url + id}.zip`);
                                 this.Remove(filesnames)
-                
+
                             } catch (error) {
                                 StatusControllers.changeStatus(id, 'error', 'Something went wrong during the label generation');
                             }

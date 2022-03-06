@@ -39,6 +39,17 @@ class AdmZipHelper {
             return [];
         }
     }
+    // extrae el archivo zip
+    static async extractArchive(filepath,outpath,id) {
+        try {
+          const zip = new AdmZip(filepath);
+          const outputDir = `${outpath}${id}`;
+          zip.extractAllTo(outputDir);
+          console.log(`Extracted to "${outputDir}" successfully`);
+        } catch (e) {
+          console.log(`Something went wrong. ${e}`);
+        }
+      }
 
 
 }

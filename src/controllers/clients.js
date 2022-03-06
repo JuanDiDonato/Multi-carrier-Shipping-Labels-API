@@ -16,7 +16,7 @@ class UserControllers {
 
     async Register(req, res) {
         const { username, password } = req.body;
-        if (Validations.notNull({ username,password })) {
+        if (!Validations.notNull({ username,password })) {
             res.status(400).json({ error: true, message: 'Complete todos los campos.' });
         } else {
             const data = await Client.findOne({ username });

@@ -13,9 +13,9 @@ class Validations {
     // valida que los datos obtenidos del body no sean nulos, ni que esten en blanco
     static notNull(data) {
         for (let i in data) {
-            if (!data[i] || data[i] === null || data[i] === '') return true
+            if (!data[i] || data[i] === null || data[i] === '') return false
         }
-        return false
+        return true
     }
     static async Exists(model, _id) {
         let data
