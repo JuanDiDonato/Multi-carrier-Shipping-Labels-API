@@ -63,11 +63,28 @@ router.post('/check', passport.authenticate('jwt', { session: false }),
      *       "message": "Ocurrio un error inesperado."
      *     }
      * 
-
-     * 
-     * 
      * 
      */ (req, res) => StatusControllers.getById(req, res));
-router.get('/check/:_id', (req, res) => StatusControllers.getZipData(req, res));
+router.get('/check/:_id', 
+    /**
+     * @api {get} /labels/check/:id Obtener ZIP
+     * @apiName Zip
+     * @apiGroup Status
+     * @apiDescription Endpoint que devuelve el contenido del Zip correspondiente
+     *
+     * @apiParam {String} Id Id del la solicitud de etiqueta
+     * @apiSuccess {String} Contenido Contenido del Zip.
+     * @apiError {Boolean} Error true o false
+     * @apiError {Boolean} Message Descripcion del error
+     * 
+     * @apiErrorExample {json} Error-Response:
+     *     HTTP/1.1 40O Bad request
+     *     {
+     *       "error": true,
+     *       "message": "Ocurrio un error inesperado."
+     *     }
+     * 
+     * 
+     */(req, res) => StatusControllers.getZipData(req, res));
 
 module.exports = router

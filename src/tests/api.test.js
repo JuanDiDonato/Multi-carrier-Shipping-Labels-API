@@ -183,9 +183,50 @@ describe('POST /check', () => {
         request
             .post('/labels/check')
             .set('Accept', 'application/json')
-            .send({_id: '6224da76c41954e5d4093041'})
+            .send({_id: '62263dcbc9ee47861a9f6073'})
             .expect(res => {res.body})
             .expect(200)
+            .end(err => {
+                if (err) return done(err);
+                done();
+            });
+    }))
+
+    it('Responde con estado 200 y el contenido del zip si el id y el estado son correctos', (done => {
+        request
+            .get('/labels/check/62263dcbc9ee47861a9f6073')
+            .set('Accept', 'application/json')
+            .expect(res => {res.body})
+            .expect(200)
+            .end(err => {
+                if (err) return done(err);
+                done();
+            });
+    }))
+
+})
+
+// endpoint status
+describe('GET /check', () => {
+
+    it('Responde con estado 200 y el contenido del zip si el id y el estado son correctos', (done => {
+        request
+            .get('/labels/check/62263dcbc9ee47861a9f6073')
+            .set('Accept', 'application/json')
+            .expect(res => {res.body})
+            .expect(200)
+            .end(err => {
+                if (err) return done(err);
+                done();
+            });
+    }))
+
+    it('Responde con estado 404 si el id es erroneo', (done => {
+        request
+            .get('/labels/check/fakeid123')
+            .set('Accept', 'application/json')
+            .expect(res => {res.body})
+            .expect(404)
             .end(err => {
                 if (err) return done(err);
                 done();

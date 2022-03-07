@@ -26,6 +26,7 @@ class Server {
         this.app.use('/labels', require('./routes/labels'));
         this.app.use('/clients', require('./routes/clients'));
         this.app.use(express.static(path.join(__dirname, 'public')))
+        this.app.use(express.static(path.join(__dirname.split('/src')[0],'doc'))) // ruta de la documentacion
     }
     Start() {
         this.app.listen(this.app.get('port'), () => {

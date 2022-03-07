@@ -1,12 +1,8 @@
 /* Controlador para verificar el estado de la etiqueta */
+const fs = require('fs'), { pipeline } = require('stream'), path = require('path')
 
 const Status = require('../models/status');
 const Validations = require('./validations/validations');
-const AdmZipHelper = require('../helpers/admZip');
-const fs = require('fs');
-const pdfParse = require("pdf-parse");
-const {pipeline} = require('stream')
-
 
 class StatusControllers {
 
@@ -31,46 +27,24 @@ class StatusControllers {
     async getZipData(req, res) {
         const { _id } = req.params;
         if (Validations.notNull({ _id })) {
-            //const pdfParser = new PDFParser();
-
-            const zip_path = `/home/juan/Documentos/Skydropx-Challenge/src/public/zip/${_id}.zip`;
-            const outpath = `/home/juan/Documentos/Skydropx-Challenge/src/public/`;
-            //var file = fs.createReadStream(zip_path);
-            var file = AdmZipHelper.Read(zip_path)
-            console.log(file[0].toString());
-            res.status(200).send(file[0].toJSON()
+            Validations.Exists(Status, _id).then(
+                data => {
+                    if (!data) res.status(404).json({ 
+                        error: true, message: 'Ocurrio un error inesperado.' 
+                    })
+                    else {
+                        const zip_path = path.join(__dirname.split('/controllers')[0],'public','zip',`${_id}.zip`)
+                        let file = fs.createReadStream(zip_path);
+                        res.setHeader('Content-Type', 'application/zip');
+                        pipeline(file, res, (error) => {
+                            if(error) console.log(error);
+                        })
+                    }
+                }
             )
-
-            //AdmZipHelper.extractArchive(zip_path, outpath, _id).then(() => {
-                
-                
-                //let pdfs = ['7481.pdf','7482.pdf','7483.pdf']
-                //pdfs.forEach(element => {
-                    //var file = fs.createReadStream(`${outpath}${_id}/${element}`);
-                    //res.setHeader('Content-Type', 'application/pdf');
-                    //res.setHeader('Content-Disposition', 'attachment; filename='+element);
-                    //file.pipe(res);
-                //});
-                
-                //const pdf_file = fs.readFileSync(`${outpath}${_id}/7481.pdf`)
-
-                //pdfParse(pdf_file).then(data => {
-                //console.log(data);
-                //return HttpResponse(bytes(data), content_type='application/pdf')
-                //})
-                // PDFParser
-
-                /*
-                pdfParser.on("pdfParser_dataError", errData => console.error(errData.parserError));
-                pdfParser.on("pdfParser_dataReady", pdfData => {
-                    console.log(pdfData.Pages[0].Texts);
-                    fs.writeFile("test.json", JSON.stringify(pdfData.Pages[0].Texts), (data) => {
-                        console.log(data);
-                    });
-                });
-                pdfParser.loadPDF(`${outpath}${_id}/7481.pdf`);
-                */
-            //})
+            
+        } else {
+            res.status(400).json({ error: true, message: 'Ocurrio un error inesperado.' })
         }
     }
 

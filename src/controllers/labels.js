@@ -63,9 +63,10 @@ class LabelController {
                 filePath.on('finish', async () => {
                     count++
                     if (count === urls.length) {
+                        //http://localhost:5000/labels/check/622620e938ad260cfff85eeb
                         try {
                             await AdmZipHelper.createZip(this.zip_path, this.pdfs_path, id)
-                            await StatusControllers.changeStatus(id, 'completed', 'Label generation completed', `${this.zip_url + id}.zip`);
+                            await StatusControllers.changeStatus(id, 'completed', 'Label generation completed', /*`${this.zip_url + id}.zip`*/ `http://localhost:5000/labels/check/${id}` );
                             this.Remove(filesnames)
 
                         } catch (error) {
