@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/SkydropxChallenge')  
+mongoose.connect(process.env.DATABASE)  
+
 
 const connection = mongoose.connection;
 connection.once ('open',()=>{
