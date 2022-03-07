@@ -43,8 +43,8 @@ class Carries {
             }
         }
     }
-
-    /* Agregar mas APIS aca! */
+    
+    /* Agregar mas APIS aqui */
 }
 
 module.exports = Carries

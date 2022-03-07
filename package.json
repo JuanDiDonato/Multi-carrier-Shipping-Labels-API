@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "adm-zip": "^0.5.9",
+    "apidoc": "^0.50.4",
     "axios": "^0.26.0",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",

@@ -25,7 +25,7 @@ describe('POST /register', () => {
                 .post('/clients/register')
                 .set('Accept', 'application/json')
                 .send({ username: 'test', password: 'test123' })
-                .expect({ error: true, message: 'Este usuario ya existe.' })
+                .expect({ error: true, message: 'Este cliente ya existe.' })
                 .expect(400)
                 .end(err => {
                     if (err) return done(err);
@@ -105,19 +105,6 @@ describe('POST /', () => {
                 done();
             });
     }))
-
-    it('Responde con un estado 400 cuando los datos recibidos son insuficientes, o no funcionan en la api carrier', done => {
-        request
-            .post('/labels')
-            .set('Accept', 'application/json')
-            .send([{ carrier: 'fake_carrier', shipment: {} }])
-            .expect({ error: true, message: 'Complete todos los campos.' })
-            .expect(400)
-            .end(err => {
-                if (err) return done(err);
-                done();
-            });
-    })
 
     it('Responde con un estado 200 y un id cuando la solicitud de generacion es exitosa', done => {
         request

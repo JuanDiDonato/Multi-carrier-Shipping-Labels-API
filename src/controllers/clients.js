@@ -16,20 +16,21 @@ class UserControllers {
 
     async Register(req, res) {
         const { username, password } = req.body;
-        if (!Validations.notNull({ username,password })) {
+        if (!Validations.notNull({ username, password })) {
             res.status(400).json({ error: true, message: 'Complete todos los campos.' });
         } else {
             const data = await Client.findOne({ username });
-            if (data) res.status(400).json({ error: true, message: 'Este usuario ya existe.' });
+            if (data) res.status(400).json({ error: true, message: 'Este cliente ya existe.' });
             else {
                 const user = new Client({ username, password });
                 user.password = await bcrypt.EncryptPassword(password);
                 user.save();
-                res.status(201).json({ error: false, message: 'Usuario creado con exito' });
+                res.status(201).json({ error: false, message: 'Cliente creado con exito' });
             }
         }
     }
     async Login(req, res) {
+
         if (req.isAuthenticated()) {
             const { _id } = req.user;
             let token = this.signToken(_id);
@@ -37,17 +38,11 @@ class UserControllers {
             res.status(200).json({ error: false });
         }
     }
-    getUser(req, res) {
-        if (req.user) {
-            const { _id, username } = req.user;
-            res.status(200).json({ _id, username,'isAuth': true });
-        } else res.status(204).end();
 
-    }
     Logout(req, res) {
         res.clearCookie('access_token');
         res.status(200).json({
-            user: {usernamr : '', password : ''},
+            user: { username: '', password: '' },
             error: false
         });
     }

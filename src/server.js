@@ -9,6 +9,7 @@ require('./database/mongoDB')
 class Server {
     constructor() {
         this.app = express();
+
     }
     Middlewares() {
         this.app.set('port',process.env.PORT);
