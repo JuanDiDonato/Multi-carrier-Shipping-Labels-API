@@ -30,14 +30,14 @@ router.post('/', passport.authenticate('jwt', { session: false }),
      * 
      * 
      */ (req, res) => LabelControllers.Shipments(req, res));
-router.post('/check', passport.authenticate('jwt', { session: false }),
+router.post('/status', passport.authenticate('jwt', { session: false }),
     /**
-     * @api {post} /labels/check Verificacion del estado de etiquetas
+     * @api {post} /labels/status Verificacion del estado de etiquetas
      * @apiName Status
      * @apiGroup Status
      * @apiDescription Endpoint que devuelve el estado de la etiqueta
      *
-     * @apiParam {String} Id Id del la solicitud de etiqueta
+     * @apiParam {String} label_id Id del la solicitud de etiqueta
      *
      * @apiSuccess {Boolean} Error true o false
      * @apiSuccess {Object} Status Estado de la etiqueta
@@ -65,9 +65,9 @@ router.post('/check', passport.authenticate('jwt', { session: false }),
      * 
      * 
      */ (req, res) => StatusControllers.getById(req, res));
-router.get('/check/:_id', 
+router.get('/status/:label_id', passport.authenticate('jwt', { session: false }),
     /**
-     * @api {get} /labels/check/:id Obtener ZIP
+     * @api {get} /labels/status/:label_id Obtener ZIP
      * @apiName Zip
      * @apiGroup Status
      * @apiDescription Endpoint que devuelve el contenido del Zip correspondiente

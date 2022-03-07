@@ -24,7 +24,7 @@ describe('POST /register', () => {
             request
                 .post('/clients/register')
                 .set('Accept', 'application/json')
-                .send({ username: 'test', password: 'test123' })
+                .send({ username: 'test', password: 'test' })
                 .expect({ error: true, message: 'Este cliente ya existe.' })
                 .expect(400)
                 .end(err => {
@@ -37,7 +37,7 @@ describe('POST /register', () => {
             request
                 .post('/clients/register')
                 .set('Accept', 'application/json')
-                .send({ username: 'juan2', password: '123' })
+                .send({ username: 'newTestUser', password: 'test' })
                 .expect({ error: false, message: 'Usuario creado con exito' })
                 .expect(201)
                 .end(err => {
@@ -79,7 +79,7 @@ describe('POST /login', () => {
             request
                 .post('/clients/login')
                 .set('Accept', 'application/json')
-                .send({ username: 'test', password: 'test123' })
+                .send({ username: 'test', password: 'test' })
                 .expect((res) => { res.body })
                 .expect(200)
                 .expect((res) => { 'access_token', res.headers['access_token'] })
@@ -152,11 +152,11 @@ describe('POST /', () => {
 });
 
 // endpoint status
-describe('POST /check', () => {
+describe('POST /status', () => {
 
     it('Responde con estado 404 cuando no se envia ningun id', (done => {
         request
-            .post('/labels/check')
+            .post('/labels/status')
             .set('Accept', 'application/json')
             .expect({ error: true, message: 'Ocurrio un error inesperado.' })
             .expect(404)
@@ -168,7 +168,7 @@ describe('POST /check', () => {
 
     it('Responde con estado 404 cuando el id no existe', (done => {
         request
-            .post('/labels/check')
+            .post('/labels/status')
             .set('Accept', 'application/json')
             .send({_id: 'fakeid123'})
             .expect({ error: true, message: 'Ocurrio un error inesperado.' })
@@ -181,21 +181,9 @@ describe('POST /check', () => {
 
     it('Responde con estado 200 y el estado si los datos son correctos', (done => {
         request
-            .post('/labels/check')
+            .post('/labels/status')
             .set('Accept', 'application/json')
-            .send({_id: '62263dcbc9ee47861a9f6073'})
-            .expect(res => {res.body})
-            .expect(200)
-            .end(err => {
-                if (err) return done(err);
-                done();
-            });
-    }))
-
-    it('Responde con estado 200 y el contenido del zip si el id y el estado son correctos', (done => {
-        request
-            .get('/labels/check/62263dcbc9ee47861a9f6073')
-            .set('Accept', 'application/json')
+            .send({label_id: '62267fe12cf9df1309a33d4b'})
             .expect(res => {res.body})
             .expect(200)
             .end(err => {
@@ -207,11 +195,11 @@ describe('POST /check', () => {
 })
 
 // endpoint status
-describe('GET /check', () => {
+describe('GET /status', () => {
 
     it('Responde con estado 200 y el contenido del zip si el id y el estado son correctos', (done => {
         request
-            .get('/labels/check/62263dcbc9ee47861a9f6073')
+            .get('/labels/status/62267fe12cf9df1309a33d4b')
             .set('Accept', 'application/json')
             .expect(res => {res.body})
             .expect(200)
@@ -223,7 +211,7 @@ describe('GET /check', () => {
 
     it('Responde con estado 404 si el id es erroneo', (done => {
         request
-            .get('/labels/check/fakeid123')
+            .get('/labels/status/fakeid123')
             .set('Accept', 'application/json')
             .expect(res => {res.body})
             .expect(404)

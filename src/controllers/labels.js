@@ -25,12 +25,14 @@ class LabelController {
          */
 
         const shipments = req.body;
+        const {_id} = req.user
         const shipments_data = Validations.isNull(shipments);
+        
         if (shipments_data && shipments_data.length === 0) {
             res.status(400).json({ error: true, message: 'Ocurrio un error.' });
         }
         else {
-            const id = await StatusControllers.Status();
+            const id = await StatusControllers.Status(_id);
             res.status(200).json({ error: false, message: 'Etiquetas solicitadas con exito.', id: id })
             this.Requests(shipments_data, id).then(async results => {
                 if (results.length > 0) {
@@ -63,10 +65,10 @@ class LabelController {
                 filePath.on('finish', async () => {
                     count++
                     if (count === urls.length) {
-                        //http://localhost:5000/labels/check/622620e938ad260cfff85eeb
+                        //http://localhost:5000/labels/status/622620e938ad260cfff85eeb
                         try {
                             await AdmZipHelper.createZip(this.zip_path, this.pdfs_path, id)
-                            await StatusControllers.changeStatus(id, 'completed', 'Label generation completed', `${this.zip_url}labels/check/${id}` );
+                            await StatusControllers.changeStatus(id, 'completed', 'Label generation completed', `${this.zip_url}labels/status/${id}` );
                             this.Remove(filesnames)
 
                         } catch (error) {

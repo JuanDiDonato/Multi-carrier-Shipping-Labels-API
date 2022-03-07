@@ -1,4 +1,5 @@
 const express = require('express'), morgan = require('morgan'), cookieParser = require('cookie-parser');
+const path = require('path');
 
 class Server {
     constructor() {
@@ -21,7 +22,7 @@ class Server {
         this.app.use('/labels', require('./routes/labels'));
         this.app.use('/clients', require('./routes/clients'));
         // this.app.use(express.static(path.join(__dirname, 'public')))
-        // this.app.use(express.static(path.join(__dirname.split('/src')[0],'doc'))) 
+        this.app.use(express.static(path.join(__dirname.split('/src')[0],'doc')));
     }
     Start() {
         this.app.listen(this.app.get('port'), () => {

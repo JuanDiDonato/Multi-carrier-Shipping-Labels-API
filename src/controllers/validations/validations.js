@@ -17,10 +17,10 @@ class Validations {
         }
         return true
     }
-    static async Exists(model, _id) {
+    static async Exists(model, label_id, _id) {
         let data
         try {
-            data = await model.findOne({ _id })
+            data = await model.findOne({ _id:label_id,client:_id })
         } catch {
             data = null
         } finally {

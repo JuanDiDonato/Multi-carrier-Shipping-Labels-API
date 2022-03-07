@@ -8,12 +8,13 @@ class StatusControllers {
 
     // obtiene el estado de la etiqueda solicitada
     async getById(req, res) {
-        const { _id } = req.body
-        const exist = await Validations.Exists(Status, _id)
+        const { label_id } = req.body
+        const { _id } = req.user;
+        const exist = await Validations.Exists(Status, label_id, _id)
         if (exist) {
-            Status.find({ _id }).then(data => {
+            Status.find({ _id: label_id }).then(data => {
                 const status = {
-                    id: data[0]._id,
+                    label_id: data[0]._id,
                     status: data[0].label_status,
                     description: data[0].label_status_description,
                     url: data[0].url
@@ -25,32 +26,33 @@ class StatusControllers {
 
     // retorna los datos del zip.
     async getZipData(req, res) {
-        const { _id } = req.params;
+        const { label_id } = req.params;
+        const { _id } = req.user;
         if (Validations.notNull({ _id })) {
-            Validations.Exists(Status, _id).then(
+            Validations.Exists(Status, label_id, _id).then(
                 data => {
-                    if (!data) res.status(404).json({ 
-                        error: true, message: 'Ocurrio un error inesperado.' 
+                    if (!data) res.status(404).json({
+                        error: true, message: 'Ocurrio un error inesperado.'
                     })
                     else {
-                        const zip_path = path.join(__dirname.split('/controllers')[0],'public','zip',`${_id}.zip`)
+                        const zip_path = path.join(__dirname.split('/controllers')[0], 'public', 'zip', `${label_id}.zip`)
                         let file = fs.createReadStream(zip_path);
                         res.setHeader('Content-Type', 'application/zip');
                         pipeline(file, res, (error) => {
-                            if(error) console.log(error);
+                            if (error) console.log(error);
                         })
                     }
                 }
             )
-            
+
         } else {
             res.status(400).json({ error: true, message: 'Ocurrio un error inesperado.' })
         }
     }
 
     // crea una nueva instancia para un zip.
-    async Status() {
-        const newStatus = new Status();
+    async Status(client) {
+        const newStatus = new Status({ client });
         await newStatus.save();
         return newStatus._id.toString()
     }
