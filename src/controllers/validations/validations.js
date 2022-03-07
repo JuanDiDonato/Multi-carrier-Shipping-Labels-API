@@ -17,6 +17,8 @@ class Validations {
         }
         return true
     }
+
+    // valida que una etiqueta exista, y que sea de un cliente dado
     static async Exists(model, label_id, _id) {
         let data
         try {

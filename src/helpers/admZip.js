@@ -39,6 +39,7 @@ class AdmZipHelper {
             return [];
         }
     }
+    
     // extrae el archivo zip
     static async extractArchive(filepath,outpath,id) {
         try {

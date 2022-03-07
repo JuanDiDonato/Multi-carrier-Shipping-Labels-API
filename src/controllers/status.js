@@ -6,7 +6,7 @@ const Validations = require('./validations/validations');
 
 class StatusControllers {
 
-    // obtiene el estado de la etiqueda solicitada
+    // obtiene el estado de la etiqueda solicitada de un cliente
     async getById(req, res) {
         const { label_id } = req.body
         const { _id } = req.user;
@@ -24,7 +24,7 @@ class StatusControllers {
         } else res.status(404).json({ error: true, message: 'Ocurrio un error inesperado.' })
     }
 
-    // retorna los datos del zip.
+    // retorna los datos del zip de un cliente
     async getZipData(req, res) {
         const { label_id } = req.params;
         const { _id } = req.user;

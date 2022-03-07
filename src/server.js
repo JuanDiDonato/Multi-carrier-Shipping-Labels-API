@@ -26,7 +26,7 @@ class Server {
     }
     Start() {
         this.app.listen(this.app.get('port'), () => {
-            console.log('[+] Servidor en linea en http://localhost:' + this.app.get('port'));
+            console.log('[+] Servidor en linea');
         })
     }
     get init() {

@@ -32,7 +32,7 @@ class LabelController {
             res.status(400).json({ error: true, message: 'Ocurrio un error.' });
         }
         else {
-            const id = await StatusControllers.Status(_id);
+            const id = await StatusControllers.Status(_id); // crea la instancia en la base de datos
             res.status(200).json({ error: false, message: 'Etiquetas solicitadas con exito.', id: id })
             this.Requests(shipments_data, id).then(async results => {
                 if (results.length > 0) {
@@ -49,8 +49,8 @@ class LabelController {
 
         /*
         Inicia el proceso para obtener la etiqueta
-        Recorre todas las URLs recibidas, y crea un Zip para cada una con el id de la solicitud.
-        Luego agrega al Zip el PDF descargado y guarda su link de descarga.
+        Recorre todas las URLs recibidas, y crea un Zip ellas con los PDFs descargados.
+        Luego agrega al Zip los PDFs descargados y guarda su link de descarga.
         */
 
         let count = 0, filesnames = [];
@@ -65,7 +65,7 @@ class LabelController {
                 filePath.on('finish', async () => {
                     count++
                     if (count === urls.length) {
-                        //http://localhost:5000/labels/status/622620e938ad260cfff85eeb
+
                         try {
                             await AdmZipHelper.createZip(this.zip_path, this.pdfs_path, id)
                             await StatusControllers.changeStatus(id, 'completed', 'Label generation completed', `${this.zip_url}labels/status/${id}` );
@@ -97,12 +97,12 @@ class LabelController {
 
     // seleciona el carrier a utilizar
     callCarrier(carrier, shipment_data) {
-        // carries de la API
+        /* Hay un objeto con el nombre del carrier y su respectiva funcion */
         const carries = {
             "fake_carrier": Carries.FakeCarrier(shipment_data)
             /* "otro_carrier" : Carries.OtroCarrier(shipment_data[i]) */
         }
-        return carries[carrier]
+        return carries[carrier] // retorna la funcion
     }
 
     // Realiza las consultas a la API deseada y retorna los resultados

@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.DATABASE)  
+/* Conexion a la base de datos MongoDB */
 
+mongoose.connect(process.env.DATABASE)  
 
 const connection = mongoose.connection;
 connection.once ('open',()=>{
