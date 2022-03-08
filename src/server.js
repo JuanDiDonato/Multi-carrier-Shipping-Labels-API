@@ -1,17 +1,18 @@
-const express = require('express'), morgan = require('morgan'), cookieParser = require('cookie-parser');
-const path = require('path');
+const express = require('express'), morgan = require('morgan');
+const path = require('path'),cookieParser = require('cookie-parser');
+
+/* Clase con las configuraciones del servidor */
 
 class Server {
     constructor() {
         this.app = express();
-
     }
     Middlewares() {
         this.app.set('port',process.env.PORT);
         this.app.use(express.json());
         this.app.use(morgan('dev'));
         this.app.use(cookieParser());
-        require('./database/mongoDB')
+        require('./database/mongoDB');
     }
     Dotenv() {
         if (process.env.NODE_ENV !== 'production') {
@@ -37,8 +38,10 @@ class Server {
     }
 }
 
-const server = new Server();
-server.init;
+/* Inicio del servidor */
 
-module.exports=server
+const server = new Server();
+server.init
+
+module.exports = server;
 
